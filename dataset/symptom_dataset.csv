@@ -1,0 +1,41 @@
+"symptoms",body_part,condition,probability,icd11,action
+"đau đầu,sốt",head,Nhiễm trùng,0.90,1C1Z,Thăm khám bác sĩ ngay
+"nhức đầu,buồn nôn",head,Đau nửa đầu,0.85,8A80,Nghỉ ngơi trong phòng tối
+"choáng váng,mệt mỏi",head,Huyết áp thấp,0.75,BA21,Nằm nghỉ, uống nước
+"mệt mỏi,đau đầu",head,Kiệt sức,0.85,MG22,Nghỉ ngơi đầy đủ
+"đau đầu,nhạy cảm ánh sáng",head,Đau nửa đầu,0.80,8A80,Tránh ánh sáng, nghỉ ngơi
+"khó thở,ho",chest,Hen suyễn,0.90,CA23,Dùng máy hít, đến bác sĩ ngay
+"đau ngực,mệt mỏi",chest,Nguy cơ bệnh tim,0.80,BA80,Kiểm tra tim mạch khẩn cấp
+"tức ngực,ợ nóng",chest,Trào ngược dạ dày,0.70,DA22,Hạn chế thức ăn chua, tham khảo bác sĩ
+"đau ngực,ho",chest,Viêm phổi,0.85,CA40,Thăm khám bác sĩ ngay
+"khó thở,tức ngực",chest,Viêm phế quản,0.75,CA20,Dùng thuốc, nghỉ ngơi
+"đau bụng,tiêu chảy",abdomen,Nhiễm trùng đường ruột,0.85,1A40,Bù nước, ăn uống nhẹ
+"buồn nôn,đau bụng",abdomen,Rối loạn tiêu hóa,0.70,DD90,Ăn nhẹ, theo dõi thêm
+"đau bụng,sốt",abdomen,Viêm ruột thừa,0.90,DB11,Đi cấp cứu ngay
+"đau bụng,ợ nóng",abdomen,Viêm dạ dày,0.80,DA42,Tránh đồ ăn cay, tham khảo bác sĩ
+"chướng bụng,đau bụng",abdomen,Hội chứng ruột kích thích,0.65,DD91,Ăn uống điều độ, tham khảo bác sĩ
+"chuột rút,đau cơ",limbs,Thiếu kali,0.65,5C51.0,Bổ sung kali qua thực phẩm
+"tê tay,đau cổ",limbs,Thoái hóa đốt sống,0.60,FA80,Vật lý trị liệu, tham khảo bác sĩ
+"đau cơ,sưng",limbs,Căng cơ,0.75,FB32,Nghỉ ngơi, chườm lạnh
+"sưng,đau khớp",limbs,Viêm khớp,0.70,FA20,Tham khảo bác sĩ chuyên khoa
+"đau chân,mệt mỏi",limbs,Chấn thương cơ/xương,0.65,ND56,Chườm lạnh, nghỉ ngơi
+"đau đầu,sốt,buồn nôn",head,Nhiễm virus,0.85,1C81,Thăm khám bác sĩ
+"nhức đầu,choáng váng",head,Thiếu máu,0.70,3A00,Nghỉ ngơi, bổ sung sắt
+"mệt mỏi,sốt",head,Sốt siêu vi,0.80,1C80,Nghỉ ngơi, bù nước
+"đau đầu,nhạy cảm âm thanh",head,Đau nửa đầu,0.85,8A80,Tránh tiếng ồn, nghỉ ngơi
+"khó thở,đau ngực",chest,Thuyên tắc phổi,0.90,BB00,Đi cấp cứu ngay
+"tức ngực,ho khan",chest,Viêm màng phổi,0.80,CB20,Thăm khám bác sĩ
+"đau ngực,mệt mỏi",chest,Nhồi máu cơ tim,0.85,BA41,Đi cấp cứu ngay
+"khó thở,mệt mỏi",chest,Suy tim,0.80,BD10,Kiểm tra tim mạch khẩn cấp
+"đau bụng,tiêu chảy,sốt",abdomen,Viêm đại tràng,0.85,DD70,Thăm khám bác sĩ
+"buồn nôn,đau bụng,ợ nóng",abdomen,Loét dạ dày,0.75,DA60,Tham khảo bác sĩ
+"đau bụng,sưng",abdomen,Tắc ruột,0.90,DB30,Đi cấp cứu ngay
+"đau bụng,buồn nôn,sốt",abdomen,Viêm túi mật,0.85,DC12,Thăm khám bác sĩ
+"chuột rút,tê chân",limbs,Thiếu magie,0.65,5C64.2,Bổ sung magie qua thực phẩm
+"đau khớp,sưng",limbs,Viêm khớp dạng thấp,0.70,FA21,Tham khảo bác sĩ chuyên khoa
+"tê tay,đau vai",limbs,Hội chứng ống cổ tay,0.65,8C10,Vật lý trị liệu, tham khảo bác sĩ
+"đau cơ,đau khớp",limbs,Viêm cơ,0.70,FB30,Nghỉ ngơi, chườm ấm
+"sưng,đau chân",limbs,Huyết khối tĩnh mạch,0.80,BD71,Đi cấp cứu ngay
+"đau đầu,mệt mỏi,choáng váng",head,Thiếu nước,0.75,5C70,Bù nước, nghỉ ngơi
+"khó thở,tức ngực,ho",chest,Viêm phế quản mạn,0.80,CA21,Tham khảo bác sĩ
+"đau bụng,tiêu chảy,buồn nôn",abdomen,Ngộ độc thực phẩm,0.85,1A00,Thăm khám bác sĩ

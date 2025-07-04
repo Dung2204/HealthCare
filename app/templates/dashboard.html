@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}Bảng Điều Khiển{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4 text-primary">Chào mừng, {{ username }}!</h2>
+
+    <!-- Trình Kiểm Tra Triệu Chứng -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-heart-pulse"></i> Kiểm Tra Triệu Chứng
+        </div>
+        <div class="card-body p-4">
+            <div class="custom-form">
+                <form method="POST" id="symptom-checker-form" class="custom-form row g-3" novalidate>
+                    {{ symptom_form.hidden_tag() }}
+                    <div class="col-md-8">
+                        <label for="symptoms" class="form-label">Nhập triệu chứng (ví dụ: đau đầu, sốt):</label>
+                        <input type="text" id="symptoms" name="symptoms" class="form-control" placeholder="Mô tả triệu chứng của bạn" required>
+                        <div class="invalid-feedback">Vui lòng nhập ít nhất một triệu chứng.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="body-part" class="form-label">Chọn vị trí trên cơ thể:</label>
+                        <select id="body-part" name="body_part" class="form-control">
+                            <option value="">Chọn vị trí</option>
+                            <option value="head">Đầu</option>
+                            <option value="chest">Ngực</option>
+                            <option value="abdomen">Bụng</option>
+                            <option value="limbs">Tay/Chân</option>
+                        </select>
+                    </div>
+                    <div class="col-12 text-center">
+                        <button type="submit" class="btn btn-custom btn-lg">Kiểm tra triệu chứng</button>
+                    </div>
+                </form>
+                <div id="symptom-result" class="mt-3 p-3 bg-light rounded" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lịch sử kiểm tra triệu chứng -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-journal-medical"></i> Lịch sử kiểm tra triệu chứng
+        </div>
+        <div class="card-body p-4">
+            <a href="{{ url_for('main.export_symptom_pdf') }}" class="btn btn-custom mb-3">Xuất báo cáo PDF</a>
+            {% if symptom_checks %}
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Triệu chứng</th>
+                            <th>Bộ phận cơ thể</th>
+                            <th>Chẩn đoán</th>
+                            <th>Xác suất</th>
+                            <th>Mã ICD-11</th>
+                            <th>Hành động</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sc in symptom_checks %}
+                        <tr>
+                            <td>{{ sc.symptoms }}</td>
+                            <td>{{ sc.body_part | capitalize }}</td>
+                            <td>{{ sc.condition }}</td>
+                            <td>{{ (sc.probability * 100) | round(1) }}%</td>
+                            <td>{{ sc.icd11 }}</td>
+                            <td>{{ sc.action }}</td>
+                            <td>{{ sc.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">Chưa có kiểm tra triệu chứng nào được thực hiện.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Chẩn đoán sức khỏe -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-clipboard2-pulse"></i> Chẩn đoán sức khỏe
+        </div>
+        <div class="card-body p-4">
+            <div class="custom-form">
+                <form method="POST" novalidate class="custom-form row g-3">
+                    {{ form.hidden_tag() }}
+                    <div class="col-md-3">
+                        {{ form.age.label(class="form-label") }}
+                        {{ form.age(class="form-control", required=True) }}
+                        <div class="invalid-feedback">Vui lòng nhập tuổi.</div>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.bmi.label(class="form-label") }}
+                        {{ form.bmi(class="form-control", required=True) }}
+                        <div class="invalid-feedback">Vui lòng nhập BMI.</div>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.glucose.label(class="form-label") }}
+                        {{ form.glucose(class="form-control", required=True) }}
+                        <div class="invalid-feedback">Vui lòng nhập Glucose.</div>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.heart_rate.label(class="form-label") }}
+                        {{ form.heart_rate(class="form-control", required=True) }}
+                        <div class="invalid-feedback">Vui lòng nhập nhịp tim.</div>
+                    </div>
+                    <div class="col-12 text-center">
+                        {{ form.submit(class="btn btn-custom btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lịch sử chẩn đoán -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-journal-medical"></i> Lịch sử chẩn đoán sức khỏe
+        </div>
+        <div class="card-body p-4">
+            <a href="{{ url_for('main.export_pdf') }}" class="btn btn-custom mb-3">Xuất báo cáo PDF</a>
+            {% if predictions %}
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Tuổi</th>
+                            <th>BMI</th>
+                            <th>Glucose</th>
+                            <th>Nhịp tim</th>
+                            <th>Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in predictions %}
+                        <tr>
+                            <td>{{ p.age }}</td>
+                            <td>{{ p.bmi }}</td>
+                            <td>{{ p.glucose }}</td>
+                            <td>{{ p.heart_rate }}</td>
+                            <td><span class="badge {{ 'bg-success' if p.result == 'No Risk' else 'bg-danger' }}">{{ p.result }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">Chưa có chẩn đoán nào được thực hiện.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Thống kê sức khỏe -->
+    <div class="card mb-5 shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <i class="bi bi-bar-chart-fill"></i> Thống kê sức khỏe
+        </div>
+        <div class="card-body p-4">
+            {% if stats.count != 0 %}
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Tuổi:</h5>
+                    <ul class="list-unstyled">
+                        <li>Số bản ghi: {{ stats.age.count }}</li>
+                        <li>Trung bình: {{ stats.age.mean|round(1) }} tuổi</li>
+                        <li>Tối đa: {{ stats.age.max }} tuổi</li>
+                        <li>Tối thiểu: {{ stats.age.min }} tuổi</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>BMI:</h5>
+                    <ul class="list-unstyled">
+                        <li>Số bản ghi: {{ stats.bmi.count }}</li>
+                        <li>Trung bình: {{ stats.bmi.mean|round(1) }}</li>
+                        <li>Tối đa: {{ stats.bmi.max }}</li>
+                        <li>Tối thiểu: {{ stats.bmi.min }}</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Glucose:</h5>
+                    <ul class="list-unstyled">
+                        <li>Số bản ghi: {{ stats.glucose.count }}</li>
+                        <li>Trung bình: {{ stats.glucose.mean|round(1) }} mg/dL</li>
+                        <li>Tối đa: {{ stats.glucose.max }} mg/dL</li>
+                        <li>Tối thiểu: {{ stats.glucose.min }} mg/dL</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5>Nhịp tim:</h5>
+                    <ul class="list-unstyled">
+                        <li>Số bản ghi: {{ stats.heart_rate.count }}</li>
+                        <li>Trung bình: {{ stats.heart_rate.mean|round(1) }} bpm</li>
+                        <li>Tối đa: {{ stats.heart_rate.max }} bpm</li>
+                        <li>Tối thiểu: {{ stats.heart_rate.min }} bpm</li>
+                    </ul>
+                </div>
+                <div class="col-12">
+                    <h5>Kết quả:</h5>
+                    <ul class="list-unstyled">
+                        <li>Số giá trị duy nhất: {{ stats.result.unique }}</li>
+                        <li>Phổ biến nhất: {{ stats.result.most_common }}</li>
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">Chưa có dữ liệu thống kê từ tệp CSV.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

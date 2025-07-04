@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Đăng nhập{% endblock %}
+{% block content %}
+<div class="container auth-container">
+    <h2 class="text-center mb-4 auth-title">Đăng nhập tài khoản</h2>
+    <div class="custom-form auth-form">
+        <form method="POST" class="custom-form" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="mb-4 input-group">
+                <span class="input-group-text auth-icon"><i class="bi bi-person-fill"></i></span>
+                {{ form.username(class="form-control auth-input", required=True, placeholder="Tên đăng nhập") }}
+                <div class="invalid-feedback">Vui lòng nhập tên đăng nhập.</div>
+            </div>
+            <div class="mb-4 input-group">
+                <span class="input-group-text auth-icon"><i class="bi bi-lock-fill"></i></span>
+                {{ form.password(class="form-control auth-input", required=True, placeholder="Mật khẩu") }}
+                <span class="input-group-text auth-icon toggle-password" onclick="togglePassword('password')"><i class="bi bi-eye-slash-fill"></i></span>
+                <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
+            </div>
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <div class="form-check">
+                    {{ form.remember(class="form-check-input auth-checkbox") }} {{ form.remember.label(class="form-check-label auth-label") }}
+                </div>
+                <a href="{{ url_for('main.forgot_password') }}" class="auth-link">Quên mật khẩu?</a>
+            </div>
+            {{ form.submit(class="btn btn-custom auth-btn w-100") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

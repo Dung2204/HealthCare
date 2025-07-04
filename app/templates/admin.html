@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block title %}Quản trị Admin{% endblock %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-4">Bảng Quản Trị Admin</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-people-fill"></i> Danh sách người dùng
+            <form method="GET" class="d-inline float-end search-form">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="{{ search_query }}" placeholder="Tìm kiếm theo tên hoặc email..." class="form-control search-input">
+                    <button type="submit" class="btn btn-custom search-btn">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tên người dùng</th>
+                            <th>Email</th>
+                            <th>Là Admin?</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ '✓' if user.is_admin else '✗' }}</td>
+                            <td>
+                                {% if not user.is_admin %}
+                                <button type="button" class="btn btn-danger btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="{{ user.id }}">Delete</button>
+                            {% else %}
+                                <span class="text-muted">Không thể xóa</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% if search_query and searched_predictions %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-journal-medical"></i> Lịch sử chẩn đoán của người dùng được tìm kiếm
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Tuổi</th>
+                            <th>BMI</th>
+                            <th>Glucose</th>
+                            <th>Nhịp tim</th>
+                            <th>Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in searched_predictions %}
+                        <tr>
+                            <td>{{ p.user.username }}</td>
+                            <td>{{ p.age }}</td>
+                            <td>{{ p.bmi }}</td>
+                            <td>{{ p.glucose }}</td>
+                            <td>{{ p.heart_rate }}</td>
+                            <td><span class="badge {{ 'bg-success' if p.result == 'No Risk' else 'bg-danger' }}">{{ p.result }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if search_query and searched_symptom_checks %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="bi bi-journal-medical"></i> Lịch sử kiểm tra triệu chứng của người dùng được tìm kiếm
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Triệu chứng</th>
+                            <th>Bộ phận cơ thể</th>
+                            <th>Chẩn đoán</th>
+                            <th>Xác suất</th>
+                            <th>Mã ICD-11</th>
+                            <th>Hành động</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sc in searched_symptom_checks %}
+                        <tr>
+                            <td>{{ sc.user.username }}</td>
+                            <td>{{ sc.symptoms }}</td>
+                            <td>{{ sc.body_part | capitalize }}</td>
+                            <td>{{ sc.condition }}</td>
+                            <td>{{ (sc.probability * 100) | round(1) }}%</td>
+                            <td>{{ sc.icd11 }}</td>
+                            <td>{{ sc.action }}</td>
+                            <td>{{ sc.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <hr class="my-4" style="border-top: 17px solid green; margin-left: 15px; margin-right: 15px;">
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-journal-medical"></i> Lịch sử chẩn đoán của tất cả người dùng
+        </div>
+        <div class="card-body">
+            {% if predictions %}
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Tuổi</th>
+                            <th>BMI</th>
+                            <th>Glucose</th>
+                            <th>Nhịp tim</th>
+                            <th>Kết quả</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in predictions %}
+                        <tr>
+                            <td>{{ p.user.username }}</td>
+                            <td>{{ p.age }}</td>
+                            <td>{{ p.bmi }}</td>
+                            <td>{{ p.glucose }}</td>
+                            <td>{{ p.heart_rate }}</td>
+                            <td><span class="badge {{ 'bg-success' if p.result == 'No Risk' else 'bg-danger' }}">{{ p.result }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>Chưa có dữ liệu chẩn đoán nào.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <i class="bi bi-journal-medical"></i> Lịch sử kiểm tra triệu chứng của tất cả người dùng
+        </div>
+        <div class="card-body">
+            {% if symptom_checks %}
+            <div class="table-responsive">
+                <table class="table user-table">
+                    <thead>
+                        <tr>
+                            <th>Người dùng</th>
+                            <th>Triệu chứng</th>
+                            <th>Bộ phận cơ thể</th>
+                            <th>Chẩn đoán</th>
+                            <th>Xác suất</th>
+                            <th>Mã ICD-11</th>
+                            <th>Hành động</th>
+                            <th>Thời gian</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sc in symptom_checks %}
+                        <tr>
+                            <td>{{ sc.user.username }}</td>
+                            <td>{{ sc.symptoms }}</td>
+                            <td>{{ sc.body_part | capitalize }}</td>
+                            <td>{{ sc.condition }}</td>
+                            <td>{{ (sc.probability * 100) | round(1) }}%</td>
+                            <td>{{ sc.icd11 }}</td>
+                            <td>{{ sc.action }}</td>
+                            <td>{{ sc.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>Chưa có dữ liệu kiểm tra triệu chứng nào.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal xác nhận xóa -->
+    <div class="modal" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Xác nhận xóa</h5>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa tài khoản này? Vui lòng nhập mật khẩu để xác nhận.</p>
+                    <form method="POST" id="delete-confirm-form" class="custom-form">
+                        {{ delete_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ delete_form.password.label }}<br>
+                            {{ delete_form.password(class="form-control", required=True) }}
+                            <div class="invalid-feedback">Vui lòng nhập mật khẩu.</div>
+                        </div>
+                        <input type="hidden" name="user_ids" id="delete-user-id">
+                        {{ delete_form.submit(class="btn btn-custom") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm Bootstrap JS và scripts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+    <!-- JavaScript xử lý modal xóa -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var deleteModal = document.getElementById('deleteModal');
+        if (deleteModal) {
+            deleteModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget; // Nút "Delete" đã kích hoạt modal
+                var userId = button ? button.getAttribute('data-user-id') : null;
+                var userIdInput = deleteModal.querySelector('#delete-user-id');
+                if (userIdInput && userId) {
+                    userIdInput.value = userId;
+                    console.log('User ID truyền vào modal (admin.html):', userId); // Log để debug
+                } else {
+                    console.error('Không tìm thấy input hoặc userId trong modal xóa:', { input: userIdInput, userId: userId });
+                }
+            });
+        }
+    });
+    </script>
+</div>
+{% endblock %}
